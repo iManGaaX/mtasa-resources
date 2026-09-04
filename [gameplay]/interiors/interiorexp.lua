@@ -8,6 +8,9 @@ addEvent ( "onPlayerInteriorWarped", true )
 addEvent ( "onInteriorHit" )
 addEvent ( "onInteriorWarped", true )
 
+-- Forward declaration
+local setPlayerInsideInterior
+
 addEventHandler ( "onResourceStart", root,
 function ( resource )
 	interiorLoadElements ( getResourceRootElement(resource), resource )
@@ -17,7 +20,7 @@ end )
 addEventHandler ( "onResourceStop", root,
 function ( resource )
 	if not interiors[resource] then return end
-	for id,interiorTable in pairs(interiors[resource]) do
+	for _, interiorTable in pairs(interiors[resource]) do
 		local interior1 = interiorTable["entry"]
 		local interior2 = interiorTable["return"]
 		if interiorMarkers[interior1] and isElement(interiorMarkers[interior1]) then
@@ -30,10 +33,10 @@ function ( resource )
 	interiors[resource] = nil
 end )
 
-function interiorLoadElements ( rootElement, resource )
+local function interiorLoadElements ( rootElement, resource )
 	---Load the exterior markers
 	local entryInteriors = getElementsByType ( "interiorEntry", rootElement )
-	for key, interior in pairs (entryInteriors) do
+	for _, interior in pairs (entryInteriors) do
 		local id = getElementData ( interior, "id" )
 		if not interiors[resource] then interiors[resource] = {} end
 		if not id then outputDebugString ( "Interiors: Error, no ID specified on entryInterior. Trying to load anyway.", 2 )
@@ -43,7 +46,7 @@ function interiorLoadElements ( rootElement, resource )
 	end
 	--Load the interior markers
 	local returnInteriors = getElementsByType ( "interiorReturn", rootElement )
-	for key, interior in pairs (returnInteriors) do
+	for _, interior in pairs (returnInteriors) do
 		local id = getElementData ( interior, "refid" )
 		if not interiors[resource] or not interiors[resource][id] then 
 			outputDebugString ( "Interiors: Error, no refid specified to returnInterior.", 1 )
@@ -53,9 +56,9 @@ function interiorLoadElements ( rootElement, resource )
 	end
 end
 
-function interiorCreateMarkers ( resource )
+local function interiorCreateMarkers ( resource )
 	if not interiors[resource] then return end
-	for interiorID, interiorTypeTable in pairs(interiors[resource]) do
+	for _, interiorTypeTable in pairs(interiors[resource]) do
 		local entryInterior = interiorTypeTable["entry"]
 		if entryInterior then
 			local entX,entY,entZ = getElementData ( entryInterior, "posX" ),getElementData ( entryInterior, "posY" ),getElementData ( entryInterior, "posZ" )
@@ -108,7 +111,6 @@ function getInteriorMarker ( elementInterior )
 	return false
 end
 
-local idLoc = { ["interiorReturn"] = "refid",["interiorEntry"] = "id" }
 addEventHandler ( "doTriggerServerEvents", root,
 	function( interior, resourceName, id )
 		if not isElement(client) then return end
@@ -122,7 +124,7 @@ addEventHandler ( "doTriggerServerEvents", root,
 )
 
 local opposite = { ["interiorReturn"] = "entry",["interiorEntry"] = "return" }
-function setPlayerInsideInterior ( player, interior, resourceName, id )
+setPlayerInsideInterior = function ( player, interior, resourceName, id )
 	if not isElement(player) then return end
 	local res = getResourceFromName(resourceName) or getThisResource()
 	if not interiors[res] or not interiors[res][id] then return end
@@ -148,5 +150,3 @@ function getInteriorName ( interior )
 		return false
 	end
 end
-
-
