@@ -95,11 +95,11 @@ local function interiorCreateMarkers ( resource )
 				interiorFromCol[col] = entryInterior
 				addEventHandler ( "onClientColShapeHit", col, colshapeHit )
 				--
-				local dimension = tonumber(getElementData ( entryInterior, "dimension" )) or 0
-				local interior = tonumber(getElementData ( entryInterior, "interior" )) or 0
+				local entDimension = tonumber(getElementData ( entryInterior, "dimension" )) or 0
+				local entInterior = tonumber(getElementData ( entryInterior, "interior" )) or 0
 				--
-				setElementInterior ( col, interior )
-				setElementDimension ( col, dimension )
+				setElementInterior ( col, entInterior )
+				setElementDimension ( col, entDimension )
 			end
 		end
 
@@ -118,11 +118,11 @@ local function interiorCreateMarkers ( resource )
 					setElementParent ( col1, returnInterior )
 					addEventHandler ( "onClientColShapeHit", col1, colshapeHit )
 					--
-					local dimension1 = tonumber(getElementData ( returnInterior, "dimension" )) or 0
-					local interior1 = tonumber(getElementData ( returnInterior, "interior" )) or 0
+					local retDimension = tonumber(getElementData ( returnInterior, "dimension" )) or 0
+					local retInterior = tonumber(getElementData ( returnInterior, "interior" )) or 0
 					--
-					setElementInterior ( col1, interior1 )
-					setElementDimension ( col1, dimension1 )
+					setElementInterior ( col1, retInterior )
+					setElementDimension ( col1, retDimension )
 				end
 			end
 		end
