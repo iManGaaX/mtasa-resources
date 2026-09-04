@@ -71,7 +71,7 @@ local function interiorLoadElements ( rootElement, resource )
 	local returnInteriors = getElementsByType ( "interiorReturn", rootElement )
 	for _, interior in pairs (returnInteriors) do
 		local id = getElementData ( interior, "refid" )
-		if not interiors[resource] or not interiors[resource][id] then 
+		if not interiors[resource] or not interiors[resource][id] then
 			outputDebugString ( "Interiors: Error, no refid specified to returnInterior.", 1 )
 		else
 			interiors[resource][id]["return"] = interior
