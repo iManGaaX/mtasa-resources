@@ -69,11 +69,11 @@ local function interiorCreateMarkers ( resource )
 				setElementParent ( marker, entryInterior )
 				interiorMarkers[entryInterior] = marker
 				--
-				local dimension = tonumber(getElementData ( entryInterior, "dimension" )) or 0
-				local interior = tonumber(getElementData ( entryInterior, "interior" )) or 0
+				local entDimension = tonumber(getElementData ( entryInterior, "dimension" )) or 0
+				local entInterior = tonumber(getElementData ( entryInterior, "interior" )) or 0
 				--
-				setElementInterior ( marker, interior )
-				setElementDimension ( marker, dimension )
+				setElementInterior ( marker, entInterior )
+				setElementDimension ( marker, entDimension )
 			end
 		end
 
@@ -90,11 +90,11 @@ local function interiorCreateMarkers ( resource )
 					interiorMarkers[returnInterior] = marker1
 					setElementParent ( marker1, returnInterior )
 					--
-					local dimension1 = tonumber(getElementData ( returnInterior, "dimension" )) or 0
-					local interior1 = tonumber(getElementData ( returnInterior, "interior" )) or 0
+					local retDimension = tonumber(getElementData ( returnInterior, "dimension" )) or 0
+					local retInterior = tonumber(getElementData ( returnInterior, "interior" )) or 0
 					--
-					setElementInterior ( marker1, interior1 )
-					setElementDimension ( marker1, dimension1 )
+					setElementInterior ( marker1, retInterior )
+					setElementDimension ( marker1, retDimension )
 				end
 			end
 		end
