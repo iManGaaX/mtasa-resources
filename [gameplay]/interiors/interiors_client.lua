@@ -18,41 +18,17 @@ local setInteriorMarkerZ = {
 	end
 }
 
--- addEventHandler("onClientElementStreamIn",root,
-	-- function()
-		-- if getElementType ( source ) == "marker" then
-			-- local parent = getElementParent ( source )
-			-- local parentType = getElementType(parent)
-			-- if parentType == "interiorEntry" or parentType == "interiorReturn" then
-				-- interiorAnims[source] = Animation.createAndPlay(
-		-- source,
-		-- { from = 0, to = 2*math.pi, time = 2000, repeats = 0, transform = math.sin, fn = setInteriorMarkerZ[parentType] }
--- )
-			-- end
-		-- end
-	-- end
--- )
-
--- addEventHandler("onClientElementStreamOut",root,
-	-- function()
-		-- if getElementType ( source ) == "marker" then
-			-- local parent = getElementParent ( source )
-			-- local parentType = getElementType(parent)
-			-- if parentType == "interiorEntry" or parentType == "interiorReturn" then
-				-- if (interiorAnims[source] ) then
-					-- interiorAnims[source]:remove()
-				-- end
-			-- end
-		-- end
-	-- end
--- )
-
 ----Main
 local interiors = {}
 local interiorCols = {}
 local interiorFromCol = {}
 local resourceFromInterior = {}
 local blockPlayer
+
+-- Forward declarations
+local colshapeHit
+local setPlayerInsideInterior
+
 addEvent ( "doWarpPlayerToInterior", true )
 addEvent ( "onClientInteriorHit" )
 addEvent ( "onClientInteriorWarped" )
@@ -66,7 +42,7 @@ end )
 addEventHandler ( "onClientResourceStop", root,
 function ( resource )
 	if not interiors[resource] then return end
-	for id,interiorTable in pairs(interiors[resource]) do
+	for _, interiorTable in pairs(interiors[resource]) do
 		local interior1 = interiorTable["entry"]
 		local interior2 = interiorTable["return"]
 		if interiorCols[interior1] and isElement(interiorCols[interior1]) then
@@ -79,10 +55,10 @@ function ( resource )
 	interiors[resource] = nil
 end )
 
-function interiorLoadElements ( rootElement, resource )
+local function interiorLoadElements ( rootElement, resource )
 	---Load the exterior markers
 	local entryInteriors = getElementsByType ( "interiorEntry", rootElement )
-	for key, interior in pairs (entryInteriors) do
+	for _, interior in pairs (entryInteriors) do
 		local id = getElementData ( interior, "id" )
 		if not interiors[resource] then interiors[resource] = {} end
 		if not id then outputDebugString ( "Interiors: Error, no ID specified on entryInterior. Trying to load anyway.", 2 )
@@ -93,7 +69,7 @@ function interiorLoadElements ( rootElement, resource )
 	end
 	--Load the interior markers
 	local returnInteriors = getElementsByType ( "interiorReturn", rootElement )
-	for key, interior in pairs (returnInteriors) do
+	for _, interior in pairs (returnInteriors) do
 		local id = getElementData ( interior, "refid" )
 		if not interiors[resource] or not interiors[resource][id] then 
 			outputDebugString ( "Interiors: Error, no refid specified to returnInterior.", 1 )
@@ -104,9 +80,9 @@ function interiorLoadElements ( rootElement, resource )
 	end
 end
 
-function interiorCreateMarkers ( resource )
+local function interiorCreateMarkers ( resource )
 	if not interiors[resource] then return end
-	for interiorID, interiorTypeTable in pairs(interiors[resource]) do
+	for _, interiorTypeTable in pairs(interiors[resource]) do
 		local entryInterior = interiorTypeTable["entry"]
 		if entryInterior then
 			local entX,entY,entZ = getElementData ( entryInterior, "posX" ),getElementData ( entryInterior, "posY" ),getElementData ( entryInterior, "posZ" )
@@ -165,7 +141,7 @@ end
 
 local opposite = { ["interiorReturn"] = "entry",["interiorEntry"] = "return" }
 local idLoc = { ["interiorReturn"] = "refid",["interiorEntry"] = "id" }
-function colshapeHit( player, matchingDimension )
+colshapeHit = function( player, matchingDimension )
 	if not isElement ( player ) or getElementType ( player ) ~= "player" then return end
 	if player ~= localPlayer then return end
 	if ( not matchingDimension ) or ( getPedOccupiedVehicle ( player ) ) or
@@ -206,7 +182,7 @@ addEventHandler ( "doWarpPlayerToInterior", root,
 	end
 )
 
-function setPlayerInsideInterior ( player, int, dim, rot, x, y, z, interior )
+setPlayerInsideInterior = function ( player, int, dim, rot, x, y, z, interior )
 	if not isElement(player) then return end
 	setElementInterior ( player, int )
 	setCameraInterior ( int )
@@ -233,5 +209,3 @@ function getInteriorName ( interior )
 		return false
 	end
 end
-
-
